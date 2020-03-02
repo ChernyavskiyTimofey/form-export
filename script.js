@@ -6,7 +6,7 @@ const yargs = require('yargs');
 const path = require('path');
 
 const options = yargs
-  .usage("Usage: node script.js -f <front/path> -b <back/path> -n <form_name>")
+  .usage("Usage: node script.js -f <front/path> -b <back/path>")
   .option("f", {alias: "front",
     describe: "Path to frontend app, include root dir <vimis-app-onco>",
     type: "string",
@@ -18,12 +18,6 @@ const options = yargs
     type: "string",
     demandOption: true
   })
-.option('n', {
-  alias: "name",
-  describe: "Name of form to edit without extension",
-  type: "string",
-  demandOption: true
-})
 .argv;
 
 (async () => {
@@ -41,8 +35,7 @@ const options = yargs
         await findFrm(fpath);
       } else if (stats.isFile()) {
         let { ext, name } = path.parse(fpath);
-        //console.log(`${name}${ext}`);
-        if ( ext == '.frm' && name == options.name) {
+        if ( ext == '.frm') {
           forms.push(fpath);
         }
       }
@@ -56,7 +49,6 @@ const options = yargs
     let frmName = `${name}${ext}`;
     console.log(frmName);
     const form = await fs.promises.readFile(frm, 'utf8');
-    /*
     const frontdoc = new parser().parseFromString(form, 'text/xml');
     let datasets = xpath.select('//nf-dataset', frontdoc);
     let actions = xpath.select('//nf-action', frontdoc);
@@ -72,7 +64,6 @@ const options = yargs
       console.log(err);
     }
 
-*/
     const backdoc = new parser().parseFromString(form, 'text/xml');
     const nodes = xpath.select('//*', backdoc);
     for (let node of nodes) {
@@ -82,7 +73,6 @@ const options = yargs
       }
     }
 
-    //const bpath = `${frm.split(fdir).shift()}/${bdir}${frmName}_back.frm`;
     const bpath = path.join(bdir, `${name}_back.frm`);
     console.log(bpath);
     try {
