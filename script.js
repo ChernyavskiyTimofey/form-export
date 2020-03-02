@@ -43,7 +43,6 @@ const options = yargs
         let { ext, name } = path.parse(fpath);
         //console.log(`${name}${ext}`);
         if ( ext == '.frm' && name == options.name) {
-          console.log(ext, name);
           forms.push(fpath);
         }
       }
@@ -53,7 +52,8 @@ const options = yargs
   await findFrm(fdir);
   console.log(forms.length);
   forms.forEach( async frm => {
-    let frmName = frm.split('/').pop().split('.').shift();
+    let { ext, name } = path.parse(frm);
+    let frmName = `${name}${ext}`;
     console.log(frmName);
     const form = await fs.promises.readFile(frm, 'utf8');
     /*
@@ -83,7 +83,7 @@ const options = yargs
     }
 
     //const bpath = `${frm.split(fdir).shift()}/${bdir}${frmName}_back.frm`;
-    const bpath = path.join(bdir, `${frmName}_back.frm`);
+    const bpath = path.join(bdir, `${name}_back.frm`);
     console.log(bpath);
     try {
       await fs.promises.writeFile(bpath, xmlserializer.serializeToString(backdoc), 'utf8');
