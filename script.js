@@ -8,7 +8,7 @@ const path = require('path');
 const options = yargs
   .usage("Usage: node script.js -f <front/path> -b <back/path> -n <form_name>")
   .option("f", {alias: "front",
-    describe: "Path to frontend app, include root dir <vimis-app-onko>",
+    describe: "Path to frontend app, include root dir <vimis-app-onco>",
     type: "string",
     demandOption: true
   })
