@@ -41,7 +41,6 @@ const options = yargs
         await findFrm(fpath);
       } else if (stats.isFile()) {
         let { ext, name } = path.parse(fpath);
-        //console.log(`${name}${ext}`);
         if ( ext == '.frm' && name == options.name) {
           forms.push(fpath);
         }
@@ -56,23 +55,6 @@ const options = yargs
     let frmName = `${name}${ext}`;
     console.log(frmName);
     const form = await fs.promises.readFile(frm, 'utf8');
-    /*
-    const frontdoc = new parser().parseFromString(form, 'text/xml');
-    let datasets = xpath.select('//nf-dataset', frontdoc);
-    let actions = xpath.select('//nf-action', frontdoc);
-    datasets.forEach( ds => {
-      ds.setAttribute('provider', 'ehr');
-      ds.setAttribute('endpoint', `/dataset/${frmName}/${ds.getAttribute('id')}`);
-    });
-
-    actions.forEach( a => a.setAttribute('provider', 'ehr'));
-    try {
-      await fs.promises.writeFile(frm, xmlserializer.serializeToString(frontdoc), 'utf-8');
-    } catch(err) {
-      console.log(err);
-    }
-
-*/
     const backdoc = new parser().parseFromString(form, 'text/xml');
     const nodes = xpath.select('//*', backdoc);
     for (let node of nodes) {
@@ -82,7 +64,6 @@ const options = yargs
       }
     }
 
-    //const bpath = `${frm.split(fdir).shift()}/${bdir}${frmName}_back.frm`;
     const bpath = path.join(bdir, `${name}_back.frm`);
     console.log(bpath);
     try {
